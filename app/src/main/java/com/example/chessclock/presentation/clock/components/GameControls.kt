@@ -62,7 +62,7 @@ fun GameControls(
                 )
             }
             FilterChip(
-                selected = state.selectedTimeControl.name == stringResource(R.string.custom_time_control),
+                selected = state.isCustomTimeControlSelected,
                 enabled = state.canSelectTimeControl,
                 onClick = onCustomClick,
                 label = { Text(stringResource(R.string.custom_time_control)) },

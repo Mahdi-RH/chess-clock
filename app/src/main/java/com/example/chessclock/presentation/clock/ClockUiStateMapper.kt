@@ -14,6 +14,8 @@ class DefaultClockUiStateMapper(
 ) : ClockUiStateMapper {
     override fun map(state: ChessGameState): ClockUiState {
         val isRunning = state.status == ClockStatus.RUNNING
+        val isPresetSelected = TimeControl.presets.any { it == state.timeControl }
+        
         return ClockUiState(
             playerOne = PlayerClockUiState(
                 player = Player.ONE,
@@ -29,7 +31,6 @@ class DefaultClockUiStateMapper(
                 isActive = isRunning && state.activePlayer == Player.TWO,
                 hasTimedOut = state.status == ClockStatus.FINISHED && state.playerTwoMillis == 0L,
             ),
-            selectedTimeControl = state.timeControl,
             availableTimeControls = TimeControl.presets.map { control ->
                 TimeControlUiState(
                     timeControl = control,
@@ -37,6 +38,7 @@ class DefaultClockUiStateMapper(
                     isSelected = state.timeControl == control
                 )
             },
+            isCustomTimeControlSelected = !isPresetSelected,
             isRunning = isRunning,
             canStart = state.status == ClockStatus.READY || state.status == ClockStatus.PAUSED,
             canPause = isRunning,

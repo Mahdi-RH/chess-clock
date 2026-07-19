@@ -6,8 +6,8 @@ import com.example.chessclock.domain.clock.model.TimeControl
 data class ClockUiState(
     val playerOne: PlayerClockUiState,
     val playerTwo: PlayerClockUiState,
-    val selectedTimeControl: TimeControl,
     val availableTimeControls: List<TimeControlUiState>,
+    val isCustomTimeControlSelected: Boolean,
     val isRunning: Boolean,
     val canStart: Boolean,
     val canPause: Boolean,
