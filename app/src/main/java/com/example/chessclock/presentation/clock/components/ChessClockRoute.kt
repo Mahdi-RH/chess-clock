@@ -11,10 +11,6 @@ fun ChessClockRoute(viewModel: ChessClockViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     ChessClockScreen(
         state = state,
-        onStart = viewModel::start,
-        onPause = viewModel::pause,
-        onReset = viewModel::reset,
-        onClockPressed = viewModel::pressClock,
-        onTimeControlSelected = viewModel::selectTimeControl,
+        onAction = viewModel::onAction,
     )
 }

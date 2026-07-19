@@ -63,11 +63,21 @@ class ChessClockEngine {
         if (state.status != ClockStatus.RUNNING || action.elapsedMillis <= 0) return state
         val activePlayer = state.activePlayer ?: return state
         val remaining = (state.remainingTime(activePlayer) - action.elapsedMillis).coerceAtLeast(0)
-        val status = if (remaining == 0L) ClockStatus.FINISHED else state.status
+        val isFinished = remaining == 0L
+        val status = if (isFinished) ClockStatus.FINISHED else state.status
 
         return when (activePlayer) {
-            Player.ONE -> state.copy(playerOneMillis = remaining, status = status)
-            Player.TWO -> state.copy(playerTwoMillis = remaining, status = status)
+            Player.ONE -> state.copy(
+                playerOneMillis = remaining,
+                status = status,
+                activePlayer = if (isFinished) null else state.activePlayer
+            )
+
+            Player.TWO -> state.copy(
+                playerTwoMillis = remaining,
+                status = status,
+                activePlayer = if (isFinished) null else state.activePlayer
+            )
         }
     }
 

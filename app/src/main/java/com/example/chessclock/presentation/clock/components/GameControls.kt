@@ -22,11 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chessclock.R
-import com.example.chessclock.domain.clock.model.TimeControl
-import com.example.chessclock.presentation.clock.ClockUiState
 import com.example.chessclock.domain.clock.model.ChessGameState
 import com.example.chessclock.domain.clock.model.ClockStatus
+import com.example.chessclock.domain.clock.model.TimeControl
 import com.example.chessclock.presentation.clock.ClockTimeFormatter
+import com.example.chessclock.presentation.clock.ClockUiAction
+import com.example.chessclock.presentation.clock.ClockUiState
 import com.example.chessclock.presentation.clock.ClockUiStateMapper
 import com.example.chessclock.presentation.theme.ChessClockTheme
 import com.example.chessclock.presentation.theme.ClockDark
@@ -35,12 +36,9 @@ import com.example.chessclock.presentation.theme.Spacing
 
 
 @Composable
- fun GameControls(
+fun GameControls(
     state: ClockUiState,
-    onStart: () -> Unit,
-    onPause: () -> Unit,
-    onReset: () -> Unit,
-    onTimeControlSelected: (TimeControl) -> Unit,
+    onAction: (ClockUiAction) -> Unit,
     onCustomClick: () -> Unit,
 ) {
     Column(
@@ -56,15 +54,15 @@ import com.example.chessclock.presentation.theme.Spacing
                 .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            TimeControl.presets.forEach { control ->  //
-                FilterChip(   //
+            TimeControl.presets.forEach { control ->
+                FilterChip(
                     selected = state.selectedTimeControl == control,
                     enabled = state.canSelectTimeControl,
-                    onClick = { onTimeControlSelected(control) },
+                    onClick = { onAction(ClockUiAction.SelectTimeControl(control)) },
                     label = { Text("${control.name} ${ClockTimeFormatter.formatTimeControl(control)}") },
                 )
             }
-            FilterChip(  //
+            FilterChip(
                 selected = state.selectedTimeControl.name == stringResource(R.string.custom_time_control),
                 enabled = state.canSelectTimeControl,
                 onClick = onCustomClick,
@@ -77,14 +75,17 @@ import com.example.chessclock.presentation.theme.Spacing
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             OutlinedButton(
-                onClick = onReset,
+                onClick = { onAction(ClockUiAction.Reset) },
                 enabled = state.canReset,
                 modifier = Modifier.weight(1f),
             ) {
                 Text(stringResource(R.string.reset))
             }
             Button(
-                onClick = if (state.isRunning) onPause else onStart,
+                onClick = {
+                    if (state.isRunning) onAction(ClockUiAction.Pause)
+                    else onAction(ClockUiAction.Start)
+                },
                 enabled = state.canStart || state.canPause,
                 modifier = Modifier.weight(2f),
                 colors = ButtonDefaults.buttonColors(containerColor = ClockGreen),
@@ -104,10 +105,7 @@ private fun InitialStatePreview() {
     ChessClockTheme {
         GameControls(
             state = previewState(ClockStatus.READY),
-            onStart = {},
-            onPause = {},
-            onReset = {},
-            onTimeControlSelected = {},
+            onAction = {},
             onCustomClick = {},
         )
     }
@@ -119,10 +117,7 @@ private fun RunningStatePreview() {
     ChessClockTheme {
         GameControls(
             state = previewState(ClockStatus.RUNNING),
-            onStart = {},
-            onPause = {},
-            onReset = {},
-            onTimeControlSelected = {},
+            onAction = {},
             onCustomClick = {},
         )
     }
@@ -134,15 +129,12 @@ private fun FinishedStatePreview() {
     ChessClockTheme {
         GameControls(
             state = previewState(ClockStatus.FINISHED),
-            onStart = {},
-            onPause = {},
-            onReset = {},
-            onTimeControlSelected = {},
+            onAction = {},
             onCustomClick = {},
         )
     }
 }
 
-private fun previewState(status: ClockStatus): ClockUiState {  //
+private fun previewState(status: ClockStatus): ClockUiState {
     return ClockUiStateMapper().map(ChessGameState(status = status))
 }

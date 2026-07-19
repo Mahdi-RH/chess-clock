@@ -13,8 +13,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.chessclock.domain.clock.model.ChessGameState
 import com.example.chessclock.domain.clock.model.Player
-import com.example.chessclock.domain.clock.model.TimeControl
+import com.example.chessclock.presentation.clock.ClockUiAction
 import com.example.chessclock.presentation.clock.ClockUiState
 import com.example.chessclock.presentation.clock.ClockUiStateMapper
 import com.example.chessclock.presentation.theme.ChessClockTheme
@@ -25,11 +26,7 @@ import com.example.chessclock.presentation.theme.Spacing
 @Composable
 fun ChessClockScreen(
     state: ClockUiState,
-    onStart: () -> Unit,
-    onPause: () -> Unit,
-    onReset: () -> Unit,
-    onClockPressed: (Player) -> Unit,
-    onTimeControlSelected: (TimeControl) -> Unit,
+    onAction: (ClockUiAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showCustomDialog by remember { mutableStateOf(false) }  // shall we persist state of dialog when process is killed?
@@ -48,16 +45,13 @@ fun ChessClockScreen(
                 isActive = state.playerTwo.isActive,
                 isFinished = state.playerTwo.isFinished,
                 enabled = state.playerTwo.isEnabled,
-                onClick = { onClockPressed(Player.TWO) },
+                onClick = { onAction(ClockUiAction.PressPlayer(Player.TWO)) },
                 modifier = Modifier.weight(1f).rotate(180f),
             )
 
             GameControls(
                 state = state,
-                onStart = onStart,
-                onPause = onPause,
-                onReset = onReset,
-                onTimeControlSelected = onTimeControlSelected,
+                onAction = onAction,
                 onCustomClick = { showCustomDialog = true },
             )
 
@@ -68,7 +62,7 @@ fun ChessClockScreen(
                 isActive = state.playerOne.isActive,
                 isFinished = state.playerOne.isFinished,
                 enabled = state.playerOne.isEnabled,
-                onClick = { onClockPressed(Player.ONE) },
+                onClick = { onAction(ClockUiAction.PressPlayer(Player.ONE)) },
                 modifier = Modifier.weight(1f),
             )
         }
@@ -78,7 +72,7 @@ fun ChessClockScreen(
         CustomTimeControlDialog(
             onDismiss = { showCustomDialog = false },
             onConfirm = {
-                onTimeControlSelected(it)
+                onAction(ClockUiAction.SelectTimeControl(it))
                 showCustomDialog = false
             },
         )
@@ -97,13 +91,9 @@ private fun ChessClockPreview() {
     ChessClockTheme {
         ChessClockScreen(
             state = ClockUiStateMapper().map(
-                com.example.chessclock.domain.clock.model.ChessGameState()
+                ChessGameState()
             ),
-            onStart = {},
-            onPause = {},
-            onReset = {},
-            onClockPressed = {},
-            onTimeControlSelected = {},
+            onAction = {},
         )
     }
 }

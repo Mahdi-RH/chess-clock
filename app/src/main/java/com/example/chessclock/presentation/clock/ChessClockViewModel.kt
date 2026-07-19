@@ -42,25 +42,39 @@ class ChessClockViewModel(
         )
     private var timerJob: Job? = null
 
-    fun start() {
+    fun onAction(action: ClockUiAction) {
+        when (action) {
+            ClockUiAction.Start -> start()
+            ClockUiAction.Pause -> pause()
+            ClockUiAction.Reset -> reset()
+            is ClockUiAction.PressPlayer -> pressClock(action.player)
+            is ClockUiAction.SelectTimeControl -> selectTimeControl(action.timeControl)
+        }
+    }
+
+    private fun start() {
         lastTickMillis = elapsedRealtimeMillis()
         dispatch(ClockAction.Start)
         startTimer()
     }
-    fun pause() {
+
+    private fun pause() {
         settleElapsedTime()
         dispatch(ClockAction.Pause)
         stopTimer()
     }
-    fun reset() {
+
+    private fun reset() {
         dispatch(ClockAction.Reset)
         stopTimer()
     }
-    fun pressClock(player: Player) {
+
+    private fun pressClock(player: Player) {
         settleElapsedTime()
         dispatch(ClockAction.PressClock(player))
         startTimer()
     }
+
     private fun startTimer() {
         if (timerJob?.isActive == true) return
 
@@ -77,21 +91,24 @@ class ChessClockViewModel(
             }
         }
     }
+
     private fun stopTimer() {
         timerJob?.cancel()
         timerJob = null
     }
-    fun selectTimeControl(timeControl: TimeControl) =  //
+
+    private fun selectTimeControl(timeControl: TimeControl) =
         dispatch(ClockAction.SelectTimeControl(timeControl))
 
     /** Accounts for time since the last UI tick before a turn or pause boundary. */
-    private fun settleElapsedTime() {  //
+    private fun settleElapsedTime() {
         val now = elapsedRealtimeMillis()
         if (gameState.value.status == ClockStatus.RUNNING) {
             dispatch(ClockAction.Tick(now - lastTickMillis))
         }
         lastTickMillis = now
     }
+
     private fun dispatch(action: ClockAction) {
         gameState.update { engine.reduce(it, action) }
     }
