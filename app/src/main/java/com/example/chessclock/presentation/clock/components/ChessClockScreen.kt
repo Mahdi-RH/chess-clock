@@ -15,9 +15,10 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.chessclock.domain.clock.model.ChessGameState
 import com.example.chessclock.domain.clock.model.Player
+import com.example.chessclock.presentation.clock.ClockTimeFormatter
 import com.example.chessclock.presentation.clock.ClockUiAction
 import com.example.chessclock.presentation.clock.ClockUiState
-import com.example.chessclock.presentation.clock.ClockUiStateMapper
+import com.example.chessclock.presentation.clock.DefaultClockUiStateMapper
 import com.example.chessclock.presentation.theme.ChessClockTheme
 import com.example.chessclock.presentation.theme.ClockDark
 import com.example.chessclock.presentation.theme.Spacing
@@ -88,11 +89,10 @@ fun ChessClockScreen(
 @Preview(showBackground = true, heightDp = 800)
 @Composable
 private fun ChessClockPreview() {
+    val mapper = DefaultClockUiStateMapper(ClockTimeFormatter())
     ChessClockTheme {
         ChessClockScreen(
-            state = ClockUiStateMapper().map(
-                ChessGameState()
-            ),
+            state = mapper.map(ChessGameState()),
             onAction = {},
         )
     }

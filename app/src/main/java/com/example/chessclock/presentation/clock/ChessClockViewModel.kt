@@ -25,7 +25,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class ChessClockViewModel(
     private val engine: ChessClockEngine = ChessClockEngine(),
-    private val uiStateMapper: ClockUiStateMapper = ClockUiStateMapper(),
+    private val uiStateMapper: ClockUiStateMapper = DefaultClockUiStateMapper(ClockTimeFormatter()),
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate,
     private val elapsedRealtimeMillis: () -> Long = {
         SystemClock.elapsedRealtime()
@@ -33,11 +33,11 @@ class ChessClockViewModel(
 ) : ViewModel() {
     private var lastTickMillis = elapsedRealtimeMillis()
     private val gameState = MutableStateFlow(ChessGameState())
-    val state: StateFlow<ClockUiState> = gameState  //
+    val state: StateFlow<ClockUiState> = gameState
         .map(uiStateMapper::map)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), //
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
             initialValue = uiStateMapper.map(gameState.value),
         )
     private var timerJob: Job? = null

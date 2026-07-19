@@ -7,11 +7,17 @@ data class ClockUiState(
     val playerOne: PlayerClockUiState,
     val playerTwo: PlayerClockUiState,
     val selectedTimeControl: TimeControl,
+    val availableTimeControls: List<TimeControlUiState>,
     val isRunning: Boolean,
     val canStart: Boolean,
     val canPause: Boolean,
     val canReset: Boolean,
     val canSelectTimeControl: Boolean,
+)
+data class TimeControlUiState(
+    val timeControl: TimeControl,
+    val displayName: String,
+    val isSelected: Boolean,
 )
 
 data class PlayerClockUiState(

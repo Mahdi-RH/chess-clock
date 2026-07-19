@@ -24,11 +24,10 @@ import androidx.compose.ui.unit.dp
 import com.example.chessclock.R
 import com.example.chessclock.domain.clock.model.ChessGameState
 import com.example.chessclock.domain.clock.model.ClockStatus
-import com.example.chessclock.domain.clock.model.TimeControl
 import com.example.chessclock.presentation.clock.ClockTimeFormatter
 import com.example.chessclock.presentation.clock.ClockUiAction
 import com.example.chessclock.presentation.clock.ClockUiState
-import com.example.chessclock.presentation.clock.ClockUiStateMapper
+import com.example.chessclock.presentation.clock.DefaultClockUiStateMapper
 import com.example.chessclock.presentation.theme.ChessClockTheme
 import com.example.chessclock.presentation.theme.ClockDark
 import com.example.chessclock.presentation.theme.ClockGreen
@@ -54,12 +53,12 @@ fun GameControls(
                 .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            TimeControl.presets.forEach { control ->
+            state.availableTimeControls.forEach { uiState ->
                 FilterChip(
-                    selected = state.selectedTimeControl == control,
+                    selected = uiState.isSelected,
                     enabled = state.canSelectTimeControl,
-                    onClick = { onAction(ClockUiAction.SelectTimeControl(control)) },
-                    label = { Text("${control.name} ${ClockTimeFormatter.formatTimeControl(control)}") },
+                    onClick = { onAction(ClockUiAction.SelectTimeControl(uiState.timeControl)) },
+                    label = { Text(uiState.displayName) },
                 )
             }
             FilterChip(
@@ -136,5 +135,6 @@ private fun FinishedStatePreview() {
 }
 
 private fun previewState(status: ClockStatus): ClockUiState {
-    return ClockUiStateMapper().map(ChessGameState(status = status))
+    val mapper = DefaultClockUiStateMapper(ClockTimeFormatter())
+    return mapper.map(ChessGameState(status = status))
 }
