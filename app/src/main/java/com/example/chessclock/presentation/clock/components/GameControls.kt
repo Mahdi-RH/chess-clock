@@ -1,15 +1,16 @@
 package com.example.chessclock.presentation.clock.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChip
@@ -44,16 +45,18 @@ fun GameControls(
         modifier = Modifier
             .fillMaxWidth()
             .background(ClockDark)
-            .padding(horizontal = Spacing.medium, vertical = Spacing.smallMedium),
+            .padding(vertical = Spacing.smallMedium),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = Spacing.medium)
         ) {
-            state.availableTimeControls.forEach { uiState ->
+            items(
+                items = state.availableTimeControls,
+                key = { it.timeControl.name }
+            ) { uiState ->
                 FilterChip(
                     selected = uiState.isSelected,
                     enabled = state.canSelectTimeControl,
@@ -61,16 +64,20 @@ fun GameControls(
                     label = { Text(uiState.displayName) },
                 )
             }
-            FilterChip(
-                selected = state.isCustomTimeControlSelected,
-                enabled = state.canSelectTimeControl,
-                onClick = onCustomClick,
-                label = { Text(stringResource(R.string.custom_time_control)) },
-            )
+            item {
+                FilterChip(
+                    selected = state.isCustomTimeControlSelected,
+                    enabled = state.canSelectTimeControl,
+                    onClick = onCustomClick,
+                    label = { Text(stringResource(R.string.custom_time_control)) },
+                )
+            }
         }
         Spacer(Modifier.height(Spacing.small))
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Spacing.medium),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             OutlinedButton(
