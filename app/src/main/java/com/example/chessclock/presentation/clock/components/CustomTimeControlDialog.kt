@@ -21,23 +21,33 @@ import com.example.chessclock.domain.clock.model.TimeControl
 @Composable
 fun CustomTimeControlDialog(
     onDismiss: () -> Unit,
-    onConfirm: (TimeControl) -> Unit,  //
+    onConfirm: (TimeControl) -> Unit,
 ) {
     var minutes by remember { mutableStateOf("5") }
     var incrementSeconds by remember { mutableStateOf("0") }
-    val minutesValue = minutes.toLongOrNull()
-    val incrementValue = incrementSeconds.toLongOrNull()
-    val valid = minutesValue != null && minutesValue in 1..180 &&
-            incrementValue != null && incrementValue in 0..60
-    
     val customName = stringResource(R.string.custom_time_control)
 
-    AlertDialog(   //
+    val minutesValue = minutes.toLongOrNull()
+    val incrementValue = incrementSeconds.toLongOrNull()
+
+    val customTimeControl = remember(minutes, incrementSeconds, customName) {
+        val m = minutes.toLongOrNull()
+        val i = incrementSeconds.toLongOrNull()
+        if (m != null && m in 1L..180L && i != null && i in 0L..60L) {
+            TimeControl(
+                name = customName,
+                baseMillis = m * 60_000,
+                incrementMillis = i * 1_000
+            )
+        } else null
+    }
+
+    AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.custom_time_control_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(stringResource(R.string.custom_time_control_desc))  
+                Text(stringResource(R.string.custom_time_control_desc))
                 OutlinedTextField(
                     value = minutes,
                     onValueChange = { minutes = it.filter(Char::isDigit).take(3) },
@@ -60,16 +70,8 @@ fun CustomTimeControlDialog(
         },
         confirmButton = {
             TextButton(
-                enabled = valid,
-                onClick = {
-                    onConfirm(
-                        TimeControl(
-                            name = customName,
-                            baseMillis = minutesValue!! * 60_000,
-                            incrementMillis = incrementValue!! * 1_000,
-                        )
-                    )
-                },
+                enabled = customTimeControl != null,
+                onClick = { customTimeControl?.let(onConfirm) },
             ) { Text(stringResource(R.string.apply)) }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
