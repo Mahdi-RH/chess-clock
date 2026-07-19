@@ -4,6 +4,7 @@ import com.example.chessclock.domain.clock.model.ChessGameState
 import com.example.chessclock.domain.clock.model.ClockStatus
 import com.example.chessclock.domain.clock.model.Player
 import com.example.chessclock.domain.clock.model.TimeControl
+import kotlinx.collections.immutable.toImmutableList
 
 interface ClockUiStateMapper {
     fun map(state: ChessGameState): ClockUiState
@@ -37,7 +38,7 @@ class DefaultClockUiStateMapper(
                     displayName = "${control.name} ${timeFormatter.formatTimeControl(control)}",
                     isSelected = state.timeControl == control
                 )
-            },
+            }.toImmutableList(),
             isCustomTimeControlSelected = !isPresetSelected,
             isRunning = isRunning,
             canStart = state.status == ClockStatus.READY || state.status == ClockStatus.PAUSED,
