@@ -1,7 +1,7 @@
 package com.example.chessclock.domain
 
-import com.example.chessclock.domain.clock.engine.ChessClockEngine
 import com.example.chessclock.domain.clock.engine.ClockAction
+import com.example.chessclock.domain.clock.engine.StandardChessClockEngine
 import com.example.chessclock.domain.clock.model.ChessGameState
 import com.example.chessclock.domain.clock.model.ClockStatus
 import com.example.chessclock.domain.clock.model.Player
@@ -10,7 +10,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class ChessClockEngineTest {
-    private val engine = ChessClockEngine()
+    private val engine = StandardChessClockEngine()
     private val control = TimeControl("Blitz", baseMillis = 180_000, incrementMillis = 2_000)
 
     @Test

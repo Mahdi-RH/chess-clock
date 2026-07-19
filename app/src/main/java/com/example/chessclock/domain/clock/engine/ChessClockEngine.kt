@@ -4,9 +4,16 @@ import com.example.chessclock.domain.clock.model.ChessGameState
 import com.example.chessclock.domain.clock.model.ClockStatus
 import com.example.chessclock.domain.clock.model.Player
 
-class ChessClockEngine {
-
+interface ChessClockEngine {
     fun reduce(
+        state: ChessGameState,
+        action: ClockAction
+    ): ChessGameState
+}
+
+class StandardChessClockEngine : ChessClockEngine {
+
+    override fun reduce(
         state: ChessGameState,
         action: ClockAction
     ): ChessGameState {
@@ -43,10 +50,6 @@ class ChessClockEngine {
     private fun reset(state: ChessGameState): ChessGameState {
         return ChessGameState(timeControl = state.timeControl)
     }
-
-//    private fun selectTimeControl(action: ClockAction.SelectTimeControl): ChessGameState {
-//        return ChessGameState(timeControl = action.timeControl)
-//    }
 
     private fun selectTimeControl(
         state: ChessGameState,
