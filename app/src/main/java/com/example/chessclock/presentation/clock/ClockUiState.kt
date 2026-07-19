@@ -25,8 +25,8 @@ data class PlayerClockUiState(
     val formattedTime: String,
     val moveCount: Int,
     val isActive: Boolean,
-    val isFinished: Boolean,
+    val hasTimedOut: Boolean,
 ) {
     val isEnabled: Boolean
-        get() = isActive && !isFinished
+        get() = isActive && !hasTimedOut
 }

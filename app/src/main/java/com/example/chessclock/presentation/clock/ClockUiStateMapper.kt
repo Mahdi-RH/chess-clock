@@ -20,14 +20,14 @@ class DefaultClockUiStateMapper(
                 formattedTime = timeFormatter.format(state.playerOneMillis),
                 moveCount = state.playerOneMoves,
                 isActive = isRunning && state.activePlayer == Player.ONE,
-                isFinished = state.status == ClockStatus.FINISHED && state.playerOneMillis == 0L,
+                hasTimedOut = state.status == ClockStatus.FINISHED && state.playerOneMillis == 0L,
             ),
             playerTwo = PlayerClockUiState(
                 player = Player.TWO,
                 formattedTime = timeFormatter.format(state.playerTwoMillis),
                 moveCount = state.playerTwoMoves,
                 isActive = isRunning && state.activePlayer == Player.TWO,
-                isFinished = state.status == ClockStatus.FINISHED && state.playerTwoMillis == 0L,
+                hasTimedOut = state.status == ClockStatus.FINISHED && state.playerTwoMillis == 0L,
             ),
             selectedTimeControl = state.timeControl,
             availableTimeControls = TimeControl.presets.map { control ->

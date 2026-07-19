@@ -46,18 +46,18 @@ import com.example.chessclock.presentation.theme.Spacing
     formattedTime: String,
     moveCount: Int,
     isActive: Boolean,
-    isFinished: Boolean,
+    hasTimedOut: Boolean,
     enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val background = when {
-        isFinished -> ClockRed
+        hasTimedOut -> ClockRed
         isActive -> ClockGreen
         else -> ClockInactive
     }
     val label = when {
-        isFinished -> stringResource(R.string.time_out)  
+        hasTimedOut -> stringResource(R.string.time_out)
         isActive -> stringResource(R.string.tap_to_end_turn)
         else -> {
             val playerNumber = if (player == Player.ONE) 1 else 2
@@ -155,7 +155,7 @@ private fun ActivePlayerPreview() {
             formattedTime = "5:00",
             moveCount = 5,
             isActive = true,
-            isFinished = false,
+            hasTimedOut = false,
             enabled = true,
             onClick = {}
         )
@@ -171,7 +171,7 @@ private fun InactivePlayerPreview() {
             formattedTime = "4:45",
             moveCount = 5,
             isActive = false,
-            isFinished = false,
+            hasTimedOut = false,
             enabled = true,
             onClick = {}
         )
@@ -187,7 +187,7 @@ private fun FinishedPlayerPreview() {
             formattedTime = "0:00.0",
             moveCount = 42,
             isActive = false,
-            isFinished = true,
+            hasTimedOut = true,
             enabled = false,
             onClick = {}
         )

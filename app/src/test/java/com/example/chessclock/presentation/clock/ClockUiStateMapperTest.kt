@@ -7,9 +7,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.Locale
 
 class ClockUiStateMapperTest {
-    private val mapper = ClockUiStateMapper()
+    private val timeFormatter = ClockTimeFormatter(Locale.US)
+    private val mapper = DefaultClockUiStateMapper(timeFormatter)
 
     @Test
     fun `maps running domain state to active player UI state`() {
@@ -41,7 +43,7 @@ class ClockUiStateMapperTest {
 
         val uiState = mapper.map(domainState)
 
-        assertTrue(uiState.playerTwo.isFinished)
+        assertTrue(uiState.playerTwo.hasTimedOut)
         assertFalse(uiState.playerTwo.isEnabled)
         assertFalse(uiState.canStart)
         assertTrue(uiState.canReset)
