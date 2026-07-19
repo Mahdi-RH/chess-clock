@@ -55,7 +55,7 @@ fun GameControls(
         ) {
             items(
                 items = state.availableTimeControls,
-                key = { it.timeControl.name }
+                key = { "${it.timeControl.name}_${it.timeControl.baseMillis}_${it.timeControl.incrementMillis}" }
             ) { uiState ->
                 FilterChip(
                     selected = uiState.isSelected,
@@ -64,7 +64,7 @@ fun GameControls(
                     label = { Text(uiState.displayName) },
                 )
             }
-            item {
+            item(key = "custom_time_control_chip") {
                 FilterChip(
                     selected = state.isCustomTimeControlSelected,
                     enabled = state.canSelectTimeControl,
