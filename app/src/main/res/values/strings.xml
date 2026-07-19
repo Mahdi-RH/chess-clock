@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Chess Clock</string>
+    <string name="custom_time_control">Custom</string>
+    <string name="reset">Reset</string>
+    <string name="pause">Pause</string>
+    <string name="start">Start</string>
+    <string name="time_out">TIME OUT</string>
+    <string name="tap_to_end_turn">TAP TO END TURN</string>
+    <string name="player_label">Player %1$d</string>
+    <plurals name="move_count">
+        <item quantity="one">%1$d move</item>
+        <item quantity="other">%1$d moves</item>
+    </plurals>
+    <string name="custom_time_control_title">Custom time control</string>
+    <string name="custom_time_control_desc">Choose equal starting time and Fischer increment for both players.</string>
+    <string name="minutes_per_player">Minutes per player</string>
+    <string name="minutes_range_hint">1–180 minutes</string>
+    <string name="increment_per_move">Increment per move</string>
+    <string name="seconds_range_hint">0–60 seconds</string>
+    <string name="apply">Apply</string>
+    <string name="cancel">Cancel</string>
+</resources>
