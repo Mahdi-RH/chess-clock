@@ -1,8 +1,10 @@
 package com.example.chessclock.di
 
 import android.os.SystemClock
+import com.example.chessclock.data.clock.BuiltInTimeControlProvider
 import com.example.chessclock.domain.clock.engine.ChessClockEngine
 import com.example.chessclock.domain.clock.engine.StandardChessClockEngine
+import com.example.chessclock.domain.clock.provider.TimeControlProvider
 import com.example.chessclock.domain.time.TimeProvider
 import com.example.chessclock.presentation.clock.ClockTimeFormatter
 import com.example.chessclock.presentation.clock.ClockUiStateMapper
@@ -47,7 +49,13 @@ object AppModule {
     @Singleton
     fun provideTimeProvider(): TimeProvider {
         return object : TimeProvider {
-            override fun getElapsedRealtime(): Long = SystemClock.elapsedRealtime()
+            override fun getElapsedRealtime(): Long = SystemClock.elapsedRealtime()  // why not --> System.currentTimeMillis()
         }
+    }
+
+    @Provides
+    @Singleton
+    fun provideTimeControlProvider(): TimeControlProvider {
+        return BuiltInTimeControlProvider()
     }
 }

@@ -11,7 +11,7 @@ import org.junit.Test
 
 class ChessClockEngineTest {
     private val engine = StandardChessClockEngine()
-    private val control = TimeControl("Blitz", baseMillis = 180_000, incrementMillis = 2_000)
+    private val control = TimeControl(1, "Blitz", baseMillis = 180_000, incrementMillis = 2_000)
 
     @Test
     fun `start activates player one and tick decreases only active clock`() {

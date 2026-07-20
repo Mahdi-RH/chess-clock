@@ -8,6 +8,7 @@ import com.example.chessclock.domain.clock.model.ChessGameState
 import com.example.chessclock.domain.clock.model.ClockStatus
 import com.example.chessclock.domain.clock.model.Player
 import com.example.chessclock.domain.clock.model.TimeControl
+import com.example.chessclock.domain.clock.provider.TimeControlProvider
 import com.example.chessclock.domain.time.TimeProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -30,17 +32,21 @@ class ChessClockViewModel @Inject constructor(
     private val uiStateMapper: ClockUiStateMapper,
     private val dispatcher: CoroutineDispatcher,
     private val timeProvider: TimeProvider,
+    timeControlProvider: TimeControlProvider,
 ) : ViewModel() {
     
     private var lastTickMillis = timeProvider.getElapsedRealtime()
-    private val gameState = MutableStateFlow(ChessGameState())
+    private val gameState = MutableStateFlow(ChessGameState(timeControlProvider.getDefaultTimeControl()))
+    private val presets = timeControlProvider.getTimeControls()
     
     val state: StateFlow<ClockUiState> = gameState
-        .map(uiStateMapper::map)
+        .map {
+            uiStateMapper.map(it, presets)
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
-            initialValue = uiStateMapper.map(gameState.value),
+            initialValue = uiStateMapper.map(gameState.value, presets),
         )
         
     private var timerJob: Job? = null

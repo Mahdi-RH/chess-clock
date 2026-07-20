@@ -1,7 +1,7 @@
 package com.example.chessclock.domain.clock.model
 
 data class ChessGameState(
-    val timeControl: TimeControl = TimeControl.presets[1], // is it stable?
+    val timeControl: TimeControl,
     val playerOneMillis: Long = timeControl.baseMillis,
     val playerTwoMillis: Long = timeControl.baseMillis,
     val activePlayer: Player? = null,

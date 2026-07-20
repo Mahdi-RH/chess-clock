@@ -35,6 +35,7 @@ fun CustomTimeControlDialog(
         val i = incrementSeconds.toLongOrNull()
         if (m != null && m in 1L..180L && i != null && i in 0L..60L) {
             TimeControl(
+                id = TimeControl.CUSTOM_ID,
                 name = customName,
                 baseMillis = m * 60_000,
                 incrementMillis = i * 1_000

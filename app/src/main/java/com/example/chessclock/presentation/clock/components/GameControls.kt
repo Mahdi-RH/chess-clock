@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.example.chessclock.R
 import com.example.chessclock.domain.clock.model.ChessGameState
 import com.example.chessclock.domain.clock.model.ClockStatus
+import com.example.chessclock.domain.clock.model.TimeControl
 import com.example.chessclock.presentation.clock.ClockTimeFormatter
 import com.example.chessclock.presentation.clock.ClockUiAction
 import com.example.chessclock.presentation.clock.ClockUiState
@@ -55,7 +56,7 @@ fun GameControls(
         ) {
             items(
                 items = state.availableTimeControls,
-                key = { "${it.timeControl.name}_${it.timeControl.baseMillis}_${it.timeControl.incrementMillis}" }
+                key = { uiState -> uiState.timeControl.id }
             ) { uiState ->
                 FilterChip(
                     selected = uiState.isSelected,
@@ -143,5 +144,7 @@ private fun FinishedStatePreview() {
 
 private fun previewState(status: ClockStatus): ClockUiState {
     val mapper = DefaultClockUiStateMapper(ClockTimeFormatter())
-    return mapper.map(ChessGameState(status = status))
+    val defaultControl = TimeControl(1, "Blitz", 180_000, 2_000)
+    val state = ChessGameState(defaultControl).copy(status = status)
+    return mapper.map(state, listOf(defaultControl))
 }

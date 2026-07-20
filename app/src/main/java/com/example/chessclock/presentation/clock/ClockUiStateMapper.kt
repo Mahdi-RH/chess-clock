@@ -7,15 +7,20 @@ import com.example.chessclock.domain.clock.model.TimeControl
 import kotlinx.collections.immutable.toImmutableList
 
 interface ClockUiStateMapper {
-    fun map(state: ChessGameState): ClockUiState
+    fun map(state: ChessGameState, presets: List<TimeControl>): ClockUiState
 }
 
 class DefaultClockUiStateMapper(
     private val timeFormatter: ClockTimeFormatter,
 ) : ClockUiStateMapper {
-    override fun map(state: ChessGameState): ClockUiState {
+    override fun map(state: ChessGameState, presets: List<TimeControl>): ClockUiState {
         val isRunning = state.status == ClockStatus.RUNNING
-        val isPresetSelected = TimeControl.presets.any { it == state.timeControl }
+        
+        val selectedPreset = presets.find {
+            it.baseMillis == state.timeControl.baseMillis && 
+            it.incrementMillis == state.timeControl.incrementMillis 
+        }
+        val isPresetSelected = selectedPreset != null
         
         return ClockUiState(
             playerOne = PlayerClockUiState(
@@ -32,11 +37,11 @@ class DefaultClockUiStateMapper(
                 isActive = isRunning && state.activePlayer == Player.TWO,
                 hasTimedOut = state.status == ClockStatus.FINISHED && state.playerTwoMillis == 0L,
             ),
-            availableTimeControls = TimeControl.presets.map { control ->
+            availableTimeControls = presets.map { control ->
                 TimeControlUiState(
                     timeControl = control,
                     displayName = "${control.name} ${timeFormatter.formatTimeControl(control)}",
-                    isSelected = state.timeControl == control
+                    isSelected = selectedPreset?.id == control.id
                 )
             }.toImmutableList(),
             isCustomTimeControlSelected = !isPresetSelected,

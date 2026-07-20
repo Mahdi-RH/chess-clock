@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.chessclock.domain.clock.model.ChessGameState
 import com.example.chessclock.domain.clock.model.Player
+import com.example.chessclock.domain.clock.model.TimeControl
 import com.example.chessclock.presentation.clock.ClockTimeFormatter
 import com.example.chessclock.presentation.clock.ClockUiAction
 import com.example.chessclock.presentation.clock.ClockUiState
@@ -90,9 +91,10 @@ fun ChessClockScreen(
 @Composable
 private fun ChessClockPreview() {
     val mapper = DefaultClockUiStateMapper(ClockTimeFormatter())
+    val defaultControl = TimeControl(1, "Blitz", 180_000, 2_000)
     ChessClockTheme {
         ChessClockScreen(
-            state = mapper.map(ChessGameState()),
+            state = mapper.map(ChessGameState(defaultControl), listOf(defaultControl)),
             onAction = {},
         )
     }
