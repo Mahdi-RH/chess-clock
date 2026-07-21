@@ -32,7 +32,7 @@ class ChessClockViewModel @Inject constructor(
     private val uiStateMapper: ClockUiStateMapper,
     private val dispatcher: CoroutineDispatcher,
     private val timeProvider: TimeProvider,
-    timeControlProvider: TimeControlProvider,
+    private val timeControlProvider: TimeControlProvider,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -43,23 +43,31 @@ class ChessClockViewModel @Inject constructor(
 
     init {
         val now = timeProvider.getElapsedRealtime()
-        val restoredState = restoreGameState()
-            ?: ChessGameState.initial(timeControlProvider.getDefaultTimeControl())
-        
-        val restoredCheckpoint = savedStateHandle.get<Long>(KEY_LAST_TRANSITION_MILLIS) ?: now
-        lastTickMillis = if (restoredCheckpoint <= now) restoredCheckpoint else now
-        
-        val initialState = if (restoredState.status == ClockStatus.RUNNING) {
-            engine.reduce(restoredState, ClockAction.Tick(now - lastTickMillis))
-        } else {
-            restoredState
-        }
-        
+        val initialState = restoreAndSettleGameState(now)
+
         gameState = MutableStateFlow(initialState)
         lastTickMillis = now
         saveGameState(initialState)
+        resumeTimerIfRunning(initialState)
+    }
 
-        if (initialState.status == ClockStatus.RUNNING) {
+    private fun restoreAndSettleGameState(now: Long): ChessGameState {
+        val restoredState = restoreGameState()
+            ?: ChessGameState.initial(timeControlProvider.getDefaultTimeControl())
+
+        if (restoredState.status != ClockStatus.RUNNING) return restoredState
+
+        val savedCheckpoint = savedStateHandle.get<Long>(KEY_LAST_TRANSITION_MILLIS) ?: now
+        val validCheckpoint = if (savedCheckpoint <= now) savedCheckpoint else now
+
+        return engine.reduce(
+            restoredState,
+            ClockAction.Tick(now - validCheckpoint),
+        )
+    }
+
+    private fun resumeTimerIfRunning(state: ChessGameState) {
+        if (state.status == ClockStatus.RUNNING) {
             startTimer()
         }
     }
