@@ -1,6 +1,6 @@
 # Chess Clock
 
-A focused Android chess clock built for the DEPT Mobile Developer take-home assignment.
+A focused Android chess clock.
 
 ## Features
 
@@ -31,12 +31,6 @@ The clock uses `SystemClock.elapsedRealtime()` instead of counting timer callbac
 Open the project in Android Studio and run the `app` configuration on an API 24+ device or emulator.
 
 From PowerShell, with `JAVA_HOME` pointing to a compatible JDK:
-
-```powershell
-.\gradlew.bat testDebugUnitTest assembleDebug lintDebug
-```
-
-The debug APK is generated at `app/build/outputs/apk/debug/app-debug.apk`.
 
 ## Scope decisions
 
