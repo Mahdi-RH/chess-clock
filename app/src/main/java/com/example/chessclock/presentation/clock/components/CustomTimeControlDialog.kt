@@ -13,6 +13,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.chessclock.R
@@ -50,6 +52,7 @@ fun CustomTimeControlDialog(
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(stringResource(R.string.custom_time_control_desc))
                 OutlinedTextField(
+                    modifier = Modifier.testTag("custom_minutes"),
                     value = minutes,
                     onValueChange = { minutes = it.filter(Char::isDigit).take(3) },
                     label = { Text(stringResource(R.string.minutes_per_player)) },
@@ -59,6 +62,7 @@ fun CustomTimeControlDialog(
                     singleLine = true,
                 )
                 OutlinedTextField(
+                    modifier = Modifier.testTag("custom_increment"),
                     value = incrementSeconds,
                     onValueChange = { incrementSeconds = it.filter(Char::isDigit).take(2) },
                     label = { Text(stringResource(R.string.increment_per_move)) },
@@ -71,6 +75,7 @@ fun CustomTimeControlDialog(
         },
         confirmButton = {
             TextButton(
+                modifier = Modifier.testTag("custom_apply"),
                 enabled = customTimeControl != null,
                 onClick = { customTimeControl?.let(onConfirm) },
             ) { Text(stringResource(R.string.apply)) }

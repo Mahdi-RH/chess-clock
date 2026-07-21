@@ -24,6 +24,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -64,12 +67,28 @@ import com.example.chessclock.presentation.theme.Spacing
             stringResource(R.string.player_label, playerNumber)
         } 
     }
+    val playerNumber = if (player == Player.ONE) 1 else 2
+    val accessibilityStatus = when {
+        hasTimedOut -> stringResource(R.string.clock_status_timed_out)
+        isActive -> stringResource(R.string.clock_status_active)
+        else -> stringResource(R.string.clock_status_inactive)
+    }
+    val accessibilityDescription = stringResource(
+        R.string.player_clock_accessibility,
+        playerNumber,
+        formattedTime,
+        accessibilityStatus,
+    )
 
     Box(
         modifier = modifier
+            .testTag("player_clock_${player.name}")
             .fillMaxWidth()
             .padding(Spacing.extraSmall)
             .background(background, RoundedCornerShape(Spacing.extraLarge))
+            .semantics(mergeDescendants = true) {
+                stateDescription = accessibilityDescription
+            }
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .padding(horizontal = Spacing.large, vertical = Spacing.small),
         contentAlignment = Alignment.Center,
@@ -116,8 +135,8 @@ private fun AutoResizingText(
     textAlign: TextAlign? = null,
     style: TextStyle = LocalTextStyle.current,
 ) {
-    val configuration = LocalConfiguration.current  //
-    var textSize by remember(targetTextSize, configuration.orientation) { //
+    val configuration = LocalConfiguration.current
+    var textSize by remember(targetTextSize, configuration.orientation) {
         mutableStateOf(targetTextSize)
     }
 

@@ -6,6 +6,10 @@
     <string name="start">Start</string>
     <string name="time_out">TIME OUT</string>
     <string name="tap_to_end_turn">TAP TO END TURN</string>
+    <string name="clock_status_active">active</string>
+    <string name="clock_status_inactive">inactive</string>
+    <string name="clock_status_timed_out">timed out</string>
+    <string name="player_clock_accessibility">Player %1$d, %2$s, %3$s</string>
     <string name="player_label">Player %1$d</string>
     <plurals name="move_count">
         <item quantity="one">%1$d move</item>

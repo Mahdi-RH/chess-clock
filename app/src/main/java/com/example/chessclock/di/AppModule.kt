@@ -49,7 +49,7 @@ object AppModule {
     @Singleton
     fun provideTimeProvider(): TimeProvider {
         return object : TimeProvider {
-            override fun getElapsedRealtime(): Long = SystemClock.elapsedRealtime()  // why not --> System.currentTimeMillis()
+            override fun getElapsedRealtime(): Long = SystemClock.elapsedRealtime()
         }
     }
 

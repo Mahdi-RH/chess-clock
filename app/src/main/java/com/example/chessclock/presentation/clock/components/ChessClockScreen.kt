@@ -31,9 +31,9 @@ fun ChessClockScreen(
     onAction: (ClockUiAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var showCustomDialog by remember { mutableStateOf(false) }  // shall we persist state of dialog when process is killed?
+    var showCustomDialog by remember { mutableStateOf(false) }
 
-    Surface(modifier = modifier.fillMaxSize(), color = ClockDark) { // ClockDark?
+    Surface(modifier = modifier.fillMaxSize(), color = ClockDark) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
