@@ -19,7 +19,7 @@ class ClockUiStateMapperTest {
     )
 
     @Test
-    fun givenRunningDomainState_whenMapped_thenActivePlayerUiStateIsCorrect() {
+    fun `given a running domain state when mapped then active player UI state is correct`() {
         val domainState = ChessGameState(
             timeControl = presets[0],
             playerOneMillis = 59_900,
@@ -41,7 +41,7 @@ class ClockUiStateMapperTest {
     }
 
     @Test
-    fun givenCustomTimeControl_whenMapped_thenCustomUiStateIsSelected() {
+    fun `given a custom time control when mapped then custom option is selected`() {
         val customControl = TimeControl(1,
             name = "Custom",
             baseMillis = 60_000,

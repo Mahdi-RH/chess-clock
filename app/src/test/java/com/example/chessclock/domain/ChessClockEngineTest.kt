@@ -14,7 +14,7 @@ class ChessClockEngineTest {
     private val control = TimeControl(1, "Blitz", baseMillis = 180_000L, incrementMillis = 2_000L)
 
     @Test
-    fun givenInitialState_whenStartActionAndTick_thenActivePlayerTimeDecreases() {
+    fun `given an initial game when started and ticked then Player One time decreases`() {
         val started = engine.reduce(ChessGameState.initial(control), ClockAction.Start)
         val ticked = engine.reduce(started, ClockAction.Tick(1_250))
 
@@ -24,7 +24,7 @@ class ChessClockEngineTest {
     }
 
     @Test
-    fun givenRunningGame_whenActivePlayerPressesClock_thenIncrementIsAppliedAndPlayerChanges() {
+    fun `given a running game when active player presses clock then increment is applied and turn changes`() {
         val started = engine.reduce(ChessGameState.initial(control), ClockAction.Start)
         val afterMove = engine.reduce(started, ClockAction.PressClock(Player.ONE))
 
@@ -34,14 +34,14 @@ class ChessClockEngineTest {
     }
 
     @Test
-    fun givenRunningGame_whenInactivePlayerPressesClock_thenStateRemainsUnchanged() {
+    fun `given a running game when inactive player presses clock then state remains unchanged`() {
         val started = engine.reduce(ChessGameState.initial(control), ClockAction.Start)
 
         assertEquals(started, engine.reduce(started, ClockAction.PressClock(Player.TWO)))
     }
 
     @Test
-    fun givenRunningGame_whenTimeExpires_thenGameFinishesAndTimeIsZero() {
+    fun `given a running game when active player time expires then game finishes with zero time`() {
         val started = engine.reduce(ChessGameState.initial(control), ClockAction.Start)
         val finished = engine.reduce(started, ClockAction.Tick(200_000))
 
@@ -50,7 +50,7 @@ class ChessClockEngineTest {
     }
 
     @Test
-    fun givenGameWithProgress_whenReset_thenStateReturnsToInitialConfiguration() {
+    fun `given a game in progress when reset then initial configuration is restored`() {
         val started = engine.reduce(ChessGameState.initial(control), ClockAction.Start)
         val ticked = engine.reduce(started, ClockAction.Tick(10_000))
         val reset = engine.reduce(ticked, ClockAction.Reset)
