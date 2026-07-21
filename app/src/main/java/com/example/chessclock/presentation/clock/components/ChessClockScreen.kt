@@ -94,7 +94,7 @@ private fun ChessClockPreview() {
     val defaultControl = TimeControl(1, "Blitz", 180_000, 2_000)
     ChessClockTheme {
         ChessClockScreen(
-            state = mapper.map(ChessGameState(defaultControl), listOf(defaultControl)),
+            state = mapper.map(ChessGameState.initial(defaultControl), listOf(defaultControl)),
             onAction = {},
         )
     }

@@ -48,7 +48,7 @@ class StandardChessClockEngine : ChessClockEngine {
     }
 
     private fun reset(state: ChessGameState): ChessGameState {
-        return ChessGameState(state.timeControl)
+        return ChessGameState.initial(state.timeControl)
     }
 
     private fun selectTimeControl(
@@ -58,7 +58,7 @@ class StandardChessClockEngine : ChessClockEngine {
         return if (state.status == ClockStatus.RUNNING) {
             state
         } else {
-            ChessGameState(action.timeControl)
+            ChessGameState.initial(action.timeControl)
         }
     }
 

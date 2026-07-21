@@ -36,7 +36,7 @@ class ChessClockViewModel @Inject constructor(
 ) : ViewModel() {
     
     private var lastTickMillis = timeProvider.getElapsedRealtime()
-    private val gameState = MutableStateFlow(ChessGameState(timeControlProvider.getDefaultTimeControl()))
+    private val gameState = MutableStateFlow(ChessGameState.initial(timeControlProvider.getDefaultTimeControl()))
     private val presets = timeControlProvider.getTimeControls()
     
     val state: StateFlow<ClockUiState> = gameState

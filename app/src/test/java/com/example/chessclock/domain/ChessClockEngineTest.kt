@@ -11,11 +11,11 @@ import org.junit.Test
 
 class ChessClockEngineTest {
     private val engine = StandardChessClockEngine()
-    private val control = TimeControl(1, "Blitz", baseMillis = 180_000, incrementMillis = 2_000)
+    private val control = TimeControl(1, "Blitz", baseMillis = 180_000L, incrementMillis = 2_000L)
 
     @Test
-    fun `start activates player one and tick decreases only active clock`() {
-        val started = engine.reduce(ChessGameState(control), ClockAction.Start)
+    fun givenInitialState_whenStartActionAndTick_thenActivePlayerTimeDecreases() {
+        val started = engine.reduce(ChessGameState.initial(control), ClockAction.Start)
         val ticked = engine.reduce(started, ClockAction.Tick(1_250))
 
         assertEquals(Player.ONE, ticked.activePlayer)
@@ -24,8 +24,8 @@ class ChessClockEngineTest {
     }
 
     @Test
-    fun `pressing active clock applies increment and changes player`() {
-        val started = engine.reduce(ChessGameState(control), ClockAction.Start)
+    fun givenRunningGame_whenActivePlayerPressesClock_thenIncrementIsAppliedAndPlayerChanges() {
+        val started = engine.reduce(ChessGameState.initial(control), ClockAction.Start)
         val afterMove = engine.reduce(started, ClockAction.PressClock(Player.ONE))
 
         assertEquals(182_000, afterMove.playerOneMillis)
@@ -34,15 +34,15 @@ class ChessClockEngineTest {
     }
 
     @Test
-    fun `pressing inactive clock has no effect`() {
-        val started = engine.reduce(ChessGameState(control), ClockAction.Start)
+    fun givenRunningGame_whenInactivePlayerPressesClock_thenStateRemainsUnchanged() {
+        val started = engine.reduce(ChessGameState.initial(control), ClockAction.Start)
 
         assertEquals(started, engine.reduce(started, ClockAction.PressClock(Player.TWO)))
     }
 
     @Test
-    fun `clock stops at zero and finishes game`() {
-        val started = engine.reduce(ChessGameState(control), ClockAction.Start)
+    fun givenRunningGame_whenTimeExpires_thenGameFinishesAndTimeIsZero() {
+        val started = engine.reduce(ChessGameState.initial(control), ClockAction.Start)
         val finished = engine.reduce(started, ClockAction.Tick(200_000))
 
         assertEquals(0, finished.playerOneMillis)
@@ -50,11 +50,11 @@ class ChessClockEngineTest {
     }
 
     @Test
-    fun `reset restores selected time control`() {
-        val started = engine.reduce(ChessGameState(control), ClockAction.Start)
+    fun givenGameWithProgress_whenReset_thenStateReturnsToInitialConfiguration() {
+        val started = engine.reduce(ChessGameState.initial(control), ClockAction.Start)
         val ticked = engine.reduce(started, ClockAction.Tick(10_000))
         val reset = engine.reduce(ticked, ClockAction.Reset)
 
-        assertEquals(ChessGameState(control), reset)
+        assertEquals(ChessGameState.initial(control), reset)
     }
 }

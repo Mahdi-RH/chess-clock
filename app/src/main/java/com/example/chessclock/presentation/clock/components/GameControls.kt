@@ -145,6 +145,6 @@ private fun FinishedStatePreview() {
 private fun previewState(status: ClockStatus): ClockUiState {
     val mapper = DefaultClockUiStateMapper(ClockTimeFormatter())
     val defaultControl = TimeControl(1, "Blitz", 180_000, 2_000)
-    val state = ChessGameState(defaultControl).copy(status = status)
+    val state = ChessGameState.initial(defaultControl).copy(status = status)
     return mapper.map(state, listOf(defaultControl))
 }

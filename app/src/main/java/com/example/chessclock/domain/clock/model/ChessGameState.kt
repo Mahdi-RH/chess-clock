@@ -13,4 +13,14 @@ data class ChessGameState(
         Player.ONE -> playerOneMillis
         Player.TWO -> playerTwoMillis
     }
+
+    companion object {
+        fun initial(timeControl: TimeControl): ChessGameState {
+            return ChessGameState(
+                timeControl = timeControl,
+                playerOneMillis = timeControl.baseMillis,
+                playerTwoMillis = timeControl.baseMillis,
+            )
+        }
+    }
 }

@@ -14,12 +14,12 @@ class ClockUiStateMapperTest {
     private val timeFormatter = ClockTimeFormatter(Locale.US)
     private val mapper = DefaultClockUiStateMapper(timeFormatter)
     private val presets = listOf(
-        TimeControl(1,"Blitz", 180_000, 2_000),
-        TimeControl(2,"Rapid", 600_000, 0)
+        TimeControl(1, "Blitz", 180_000, 2_000),
+        TimeControl(2, "Rapid", 600_000, 0)
     )
 
     @Test
-    fun `maps running domain state to active player UI state`() {
+    fun givenRunningDomainState_whenMapped_thenActivePlayerUiStateIsCorrect() {
         val domainState = ChessGameState(
             timeControl = presets[0],
             playerOneMillis = 59_900,
@@ -41,13 +41,13 @@ class ClockUiStateMapperTest {
     }
 
     @Test
-    fun `maps custom time control to selected custom UI state`() {
+    fun givenCustomTimeControl_whenMapped_thenCustomUiStateIsSelected() {
         val customControl = TimeControl(1,
             name = "Custom",
             baseMillis = 60_000,
             incrementMillis = 0
         )
-        val domainState = ChessGameState(customControl)
+        val domainState = ChessGameState.initial(customControl)
 
         val uiState = mapper.map(domainState, presets)
 
