@@ -11,6 +11,7 @@ import com.example.chessclock.domain.clock.model.Player
 import com.example.chessclock.domain.clock.model.TimeControl
 import com.example.chessclock.domain.clock.provider.TimeControlProvider
 import com.example.chessclock.domain.time.TimeProvider
+import com.example.chessclock.di.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
@@ -30,7 +31,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class ChessClockViewModel @Inject constructor(
     private val engine: ChessClockEngine,
     private val uiStateMapper: ClockUiStateMapper,
-    private val dispatcher: CoroutineDispatcher,
+    @param:MainDispatcher private val dispatcher: CoroutineDispatcher,
     private val timeProvider: TimeProvider,
     private val timeControlProvider: TimeControlProvider,
     private val savedStateHandle: SavedStateHandle,

@@ -41,6 +41,7 @@ object AppModule {
 
     @Provides
     @Singleton
+    @MainDispatcher
     fun provideMainImmediateDispatcher(): CoroutineDispatcher {
         return Dispatchers.Main.immediate
     }
