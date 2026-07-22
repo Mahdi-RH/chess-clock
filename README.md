@@ -76,6 +76,7 @@ When Android recreates the process, a running game deducts the elapsed backgroun
 - Kotlin 2.2.10
 - Jetpack Compose with Material 3
 - Compose BOM 2026.02.01
+- Gradle 9.4.1 and Android Gradle Plugin 9.2.1
 - Android Architecture Components: ViewModel, `SavedStateHandle`, lifecycle-aware Compose collection
 - Kotlin Coroutines and `StateFlow`
 - Hilt for dependency injection
