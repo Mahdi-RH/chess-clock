@@ -2,7 +2,7 @@
 
 A focused Android chess clock built with Kotlin and Jetpack Compose. It provides two face-to-face clocks, common chess time controls, Fischer increment, custom game settings, lifecycle-safe state handling, and process-death restoration.
 
-![Home Screen](docs/images/home.png)
+<img src="docs/images/home.png" width="300" alt="Home Screen">
 
 ## Features
 
